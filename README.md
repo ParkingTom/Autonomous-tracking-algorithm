@@ -6,7 +6,7 @@ Next, the algorithm identifies the centroid of the primary region in each frame.
 This algorithm was utilized for optimization of the thresholds and offline evaluation of the autonomous tracking algorithm compared with a sonographer's sample gate.
 
 # Software availability
-This package is supported for macOS and Windows. The package has been tested on the following systems by using Matlab 2021a:
+This package is supported for macOS and Windows. The package has been tested on the following systems by using Matlab 2023b:
 
 macOS: Sonoma (14.4.1)
 
