@@ -3,10 +3,10 @@
 
 clear all
 
-vidObj = VideoReader('Sample.mp4'); % Load video
+vidObj = VideoReader('Sample.mp4'); % Load RGB video
 VFR = vidObj.FrameRate % Obtain frame rate
 IUmbArtSeg = read(vidObj);
-Th = 16; % Size of the inspected frame window
+Th = 16; % Size of the inspected frame window, change with desired window time length and framerate
 clear vidObj
 
 %% Identify the pulsating region
@@ -22,19 +22,22 @@ clear NColorImg
 iuasDiff = squeeze(sum(abs(IUmbArtSeg(:,:,:,1:end-1)-IUmbArtSeg(:,:,:,2:end)),3));
 
 %% Segment the umbilical artery
-SE = ones(1,1,Th);
+SE = ones(1,1,Th); % Structural element
 ClrDiffSum = convn(iuasDiff,SE,'valid');
 clear iuasDiff
 SzClr = size(ClrDiffSum)
 clear IUmbArt
 
 Prtn = 16; % Portion of maximum color change used as a threshold to differentiate artery and background
+% The portion sets an adaptive threshold for vessel segmentation. For
+% Verasonics operation, an emperical threshold of 4.875 color difference
+% is used
 CDResult = ClrDiffSum>max(ClrDiffSum,[],'all')*1/Prtn; 
 CDResult = CDResult .* NColorImgLogic(:,:,1+Th/2:SzClr(3)+Th/2);
 clear NColorImgLogic
 clear ClrDiffSum
 
-% Use morphological closing to get more precise centroid and remove noises
+% Use morphological operations to get more precise centroid and remove noises
 SE = ones(8,8);
 I = logical.empty;
 for tp = 1:SzClr(3)
@@ -88,7 +91,7 @@ end
 
 stdThresh = 75; % Standard deviation threshold
 
-Ct = 0;
+Ct = 0; % Optional: a time counter to preent the sample gate being changed too frequently. Usually for testing purposes.
 for tp = 1+Th/2 : SzClr(3)-Th/2
 %% Register as sample gate
     if  CntCords(1,tp) > 4 && CntCords(2,tp) > 4
@@ -98,13 +101,15 @@ for tp = 1+Th/2 : SzClr(3)-Th/2
         else
             if max(CntCordsStd(:,tp-Th/2)) <= stdThresh
                 IGfinal(CntCords(1,tp)-3:CntCords(1,tp)+3,CntCords(2,tp)-3:CntCords(2,tp)+3,:,tp:tp+VFR-1) = repmat(reshape([0 255 0],[1 1 3]),[7,7,1,VFR]);
-                Ct = VFR;
+                Ct = VFR; % The minimal sampling gate change time is 1 second
             end
         end
     end
 end
 
 %% Display final results
+% Make sure the host have enough calculating power on CPU to ensure correct
+% framerate for the display
 for tp = 1:SzClr(3)
     image(IGfinal(:,:,:,tp))
     pause(1/VFR);
