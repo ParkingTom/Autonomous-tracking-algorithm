@@ -1,4 +1,14 @@
-% Umbilical artery autonomous tracking algorithm
+% Umbilical artery autonomous tracking algorithm. By measuring the
+% change of ultrasound color Doppler pixel value, the algorithm
+% differenciates the umbilical artery with background. XX thresholds was
+% used throughout the algorithm as tunable variants; MeanColorThresh is the
+% threshold to eliminate background noises; Prtn is the portion of maximum
+% color change to differenciate pulsating artery and veins/background;
+% SizeThLow and SizeThHigh are size thresholds to discard cases where
+% segmented area is too large or too small to be identified as umbilical
+% artery; stdThresh is the coordinate standard deviation threshold to
+% discard cases where artery position has large movements and is not fit
+% for artery tracking.
 % Owned by Sheng Xu research group, University of California, San Diego
 
 clear all
@@ -108,9 +118,10 @@ for tp = 1+Th/2 : SzClr(3)-Th/2
 end
 
 %% Display final results
-% Make sure the host have enough calculating power on CPU to ensure correct
+% Make sure the host have enough calculation power on CPU to ensure correct
 % framerate for the display
 for tp = 1:SzClr(3)
     image(IGfinal(:,:,:,tp))
     pause(1/VFR);
+
 end
