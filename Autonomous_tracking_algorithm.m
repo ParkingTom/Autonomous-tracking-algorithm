@@ -1,14 +1,11 @@
-% Umbilical artery autonomous tracking algorithm. By measuring the
-% change of ultrasound color Doppler pixel value, the algorithm
-% differenciates the umbilical artery with background. XX thresholds was
-% used throughout the algorithm as tunable variants; MeanColorThresh is the
-% threshold to eliminate background noises; Prtn is the portion of maximum
-% color change to differenciate pulsating artery and veins/background;
-% SizeThLow and SizeThHigh are size thresholds to discard cases where
-% segmented area is too large or too small to be identified as umbilical
-% artery; stdThresh is the coordinate standard deviation threshold to
-% discard cases where artery position has large movements and is not fit
-% for artery tracking.
+% Umbilical artery autonomous tracking algorithm. 
+% By measuring the inter-frame color difference in the duplex video, 
+% the tracking algorithm identifies the centroid of the umbilical artery. 
+% MeanColorThresh is the threshold to eliminate background noises; 
+% Prtn is the portion of maximum color change to differentiate pulsating arteries and vein;
+% SizeThLow and SizeThHigh are size thresholds to discard cases,
+% where segmented area is too small or too large to be identified as umbilical artery; 
+% stdThresh is the standard deviation threshold to discard cases during fast cord movements.
 % Owned by Sheng Xu research group, University of California, San Diego
 
 clear all
@@ -38,7 +35,7 @@ clear iuasDiff
 SzClr = size(ClrDiffSum)
 clear IUmbArt
 
-Prtn = 16; % Portion of maximum color change used as a threshold to differentiate artery and background
+Prtn = 16; % Portion of maximum color change used as a threshold to differentiate arteries, vein, and background
 % The portion sets an adaptive threshold for vessel segmentation. For
 % Verasonics operation, an emperical threshold of 4.875 color difference
 % is used
@@ -67,7 +64,7 @@ for tp = 1:SzClr(3)
     Npixel = squeeze(sum(thisBlob,[1 2]));
     [mxP,ImxP] = max(Npixel);
     SizeThLow = 80; % Threshold to filter small regions that are noises
-    SizeThHigh = 50000; % Threshold to filer regions that are caused by large movement
+    SizeThHigh = 50000; % Threshold to filter regions that are caused by large movement
     % If the area of the primary region is smaller than the threshold, this frame is considered invalid
     if isempty(ImxP) ~= 1 && mxP > SizeThLow && mxP < SizeThHigh
         BlobVid(:,:,tp) = thisBlob(:,:,ImxP(1));
@@ -125,3 +122,4 @@ for tp = 1:SzClr(3)
     pause(1/VFR);
 
 end
+
