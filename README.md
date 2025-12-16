@@ -13,4 +13,4 @@ Windows: Win 10
 MATLAB Image processing Toolbox Version 11.3 is required to run this code.
 
 # Sample availability
-One example video "Sample.mp4" was collected from the umbilical cord of the pregnant woman. The video can be directly loaded obtaining the sample gate throughout the video. An example code, Autonomous_Tracking_Example.m, is provided to run the algorithm and check video availability.
+One example video "Sample.mp4" was collected from the umbilical cord of the pregnant woman. The video can be directly loaded obtaining the sample gate throughout the video.
