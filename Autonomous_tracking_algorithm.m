@@ -16,12 +16,25 @@ IUmbArtSeg = read(vidObj);
 Th = 16; % Size of the inspected frame window, change with desired window time length and framerate
 clear vidObj
 
+% Unit test for video reading
+for tp = 1:SZSeg(4)
+    imshow(IUmbArtSeg(:,:,:,tp))
+    pause(1/VFR);
+end
+
 %% Identify the pulsating region
 MeanColor = repmat(mean(IUmbArtSeg,3),[1 1 3 1]); % Mean intensity of RGB channel for each pixel in each frame
 NImg = double(IUmbArtSeg) - MeanColor;
 clear MeanColor
 NColorImg = squeeze(sum(NImg.^2,3));
 clear NImg
+
+% Unit test for inter-frame change video
+for tp = 1:SZSeg(4)
+    imshow(NColorImg(:,:,tp))
+    pause(1/VFR);
+end
+
 MeanColorThresh = 50; % Threshold to distinguish the colored pixel and B mode pixel
 NColorImgLogic = NColorImg > MeanColorThresh;
 clear NColorImg
@@ -41,6 +54,14 @@ Prtn = 16; % Portion of maximum color change used as a threshold to differentiat
 % is used
 CDResult = ClrDiffSum>max(ClrDiffSum,[],'all')*1/Prtn; 
 CDResult = CDResult .* NColorImgLogic(:,:,1+Th/2:SzClr(3)+Th/2);
+
+% Unit test for the segmented artery
+for tp = 1:SzClr(3)
+%     imshow(CDResult(:,:,tp))
+    imshowpair(CDResult(:,:,tp),IUmbArtSeg(:,:,:,tp+Th/2),'montage') %
+    pause(1/VFR);
+end
+
 clear NColorImgLogic
 clear ClrDiffSum
 
@@ -122,4 +143,3 @@ for tp = 1:SzClr(3)
     pause(1/VFR);
 
 end
-
