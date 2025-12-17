@@ -17,6 +17,7 @@ Th = 16; % Size of the inspected frame window, change with desired window time l
 clear vidObj
 
 % Unit test for video reading
+SZSeg = size(IUmbArtSeg);
 for tp = 1:SZSeg(4)
     imshow(IUmbArtSeg(:,:,:,tp))
     pause(1/VFR);
@@ -136,10 +137,11 @@ for tp = 1+Th/2 : SzClr(3)-Th/2
 end
 
 %% Display final results
-% Make sure the host have enough calculation power on CPU to ensure correct
+% Make sure the host has enough calculation power on the CPU to ensure correct
 % framerate for the display
 for tp = 1:SzClr(3)
     image(IGfinal(:,:,:,tp))
     pause(1/VFR);
 
 end
+
