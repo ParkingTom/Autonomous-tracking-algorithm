@@ -10,7 +10,7 @@ macOS: Sonoma (14.4.1)
 
 Windows: Win 10
 
-MATLAB Image processing Toolbox Version 11.3 is required to run this code.
+MATLAB Image Processing Toolbox Version 11.3 is required to run this code.
 
 # Sample availability
 One example video "Sample.mp4" was collected from the umbilical cord of the pregnant woman. The video can be directly loaded obtaining the sample gate throughout the video.
