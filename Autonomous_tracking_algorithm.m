@@ -1,12 +1,12 @@
 % Umbilical artery autonomous tracking algorithm. 
 % By measuring the inter-frame color difference in the duplex video, 
 % the tracking algorithm identifies the centroid of the umbilical artery. 
-% MeanColorThresh is the threshold to eliminate background noises; 
-% Prtn is the portion of maximum color change to differentiate pulsating arteries and vein;
+% MeanColorThresh is the threshold to distinguish the color Doppler pixels with B-mode pixels; 
+% Prtn is the thresshold to differentiate the pulsating artery and non-pulsating vein regions using the inter-frame color difference;
 % SizeThLow and SizeThHigh are size thresholds to discard cases,
 % where segmented area is too small or too large to be identified as umbilical artery; 
 % stdThresh is the standard deviation threshold to discard cases during fast cord movements.
-% Owned by Sheng Xu research group, University of California, San Diego
+% Owned by Sheng Xu research group, University of California, San Diego.
 
 clear all
 
@@ -16,7 +16,7 @@ IUmbArtSeg = read(vidObj);
 Th = 16; % Size of the inspected frame window, change with desired window time length and framerate
 clear vidObj
 
-% Unit test for video reading
+% Unit test for playing the video
 SZSeg = size(IUmbArtSeg);
 for tp = 1:SZSeg(4)
     imshow(IUmbArtSeg(:,:,:,tp))
@@ -30,15 +30,15 @@ clear MeanColor
 NColorImg = squeeze(sum(NImg.^2,3));
 clear NImg
 
-% Unit test for inter-frame change video
-for tp = 1:SZSeg(4)
-    imshow(NColorImg(:,:,tp))
-    pause(1/VFR);
-end
-
-MeanColorThresh = 50; % Threshold to distinguish the colored pixel and B mode pixel
+MeanColorThresh = 50; % Threshold to distinguish the color Doppler pixels with B-mode pixels
 NColorImgLogic = NColorImg > MeanColorThresh;
 clear NColorImg
+
+% Unit test for segmenting the color Doppler pixels
+for tp = 1:SZSeg(4)
+    imshow(NColorImgLogic(:,:,tp))
+    pause(1/VFR);
+end
 
 iuasDiff = squeeze(sum(abs(IUmbArtSeg(:,:,:,1:end-1)-IUmbArtSeg(:,:,:,2:end)),3));
 
@@ -49,14 +49,14 @@ clear iuasDiff
 SzClr = size(ClrDiffSum)
 clear IUmbArt
 
-Prtn = 16; % Portion of maximum color change used as a threshold to differentiate arteries, vein, and background
+Prtn = 16; % Threshold to differentiate the pulsating artery and non-pulsating vein regions using the inter-frame color difference
 % The portion sets an adaptive threshold for vessel segmentation. For
 % Verasonics operation, an emperical threshold of 4.875 color difference
 % is used
 CDResult = ClrDiffSum>max(ClrDiffSum,[],'all')*1/Prtn; 
 CDResult = CDResult .* NColorImgLogic(:,:,1+Th/2:SzClr(3)+Th/2);
 
-% Unit test for the segmented artery
+% Unit test for segmenting the umbilical arteries
 for tp = 1:SzClr(3)
 %     imshow(CDResult(:,:,tp))
     imshowpair(CDResult(:,:,tp),IUmbArtSeg(:,:,:,tp+Th/2),'montage') %
@@ -74,7 +74,7 @@ for tp = 1:SzClr(3)
 end
 clear CDResult
 
-%% Recognize the primary region of umbilical artery
+%% Recognize the primary region of the umbilical artery
 tic
 BlobVid = zeros(SzClr);
 for tp = 1:SzClr(3)
@@ -96,7 +96,7 @@ toc
 
 clear I
 
-% Display the segmented primary region
+% Unit test for recognizing the primary region
 for tp = 1:SzClr(3)
     imshowpair(BlobVid(:,:,tp),IUmbArtSeg(:,:,:,tp+Th/2),'montage')
     pause(2*1/VFR);
@@ -144,4 +144,5 @@ for tp = 1:SzClr(3)
     pause(1/VFR);
 
 end
+
 
