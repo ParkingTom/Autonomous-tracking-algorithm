@@ -36,7 +36,7 @@ clear NColorImg
 
 % Unit test for segmenting the color Doppler pixels
 for tp = 1:SZSeg(4)
-    imshow(NColorImgLogic(:,:,tp))
+    imshowpair(NColorImgLogic(:,:,tp),IUmbArtSeg(:,:,:,tp),'montage')
     pause(1/VFR);
 end
 
@@ -144,5 +144,6 @@ for tp = 1:SzClr(3)
     pause(1/VFR);
 
 end
+
 
 
