@@ -57,7 +57,7 @@ CDResult = CDResult .* NColorImgLogic(:,:,1+Th/2:SzClr(3)+Th/2);
 
 % % Unit test for segmenting the umbilical arteries
 % for tp = 1:SzClr(3)
-%     imshowpair(CDResult(:,:,tp),IUmbArtSeg(:,:,:,tp+Th/2),'montage') %
+%     imshowpair(CDResult(:,:,tp),IUmbArtSeg(:,:,:,tp+Th/2),'montage')
 %     pause(1/VFR);
 % end
 
@@ -143,6 +143,7 @@ for tp = 1:SzClr(3)
     pause(1/VFR);
 
 end
+
 
 
 
