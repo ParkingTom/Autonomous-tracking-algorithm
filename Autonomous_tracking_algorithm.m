@@ -1,10 +1,10 @@
 % Umbilical artery autonomous tracking algorithm. 
 % By measuring the inter-frame color difference in the duplex video, 
 % the tracking algorithm identifies the centroid of the umbilical artery. 
-% MeanColorThresh is the threshold to distinguish the color Doppler pixels with B-mode pixels; 
-% Prtn is the threshhold to differentiate the pulsating artery and non-pulsating vein regions using the inter-frame color difference;
+% MeanColorThresh is the threshold to distinguish the color Doppler pixels from B-mode pixels; 
+% Prtn is the threshold to differentiate the pulsating artery and non-pulsating vein regions using the inter-frame color difference;
 % SizeThLow and SizeThHigh are size thresholds to discard cases,
-% where segmented area is too small or too large to be identified as umbilical artery; 
+% where the segmented area is too small or too large to be identified as the umbilical artery; 
 % stdThresh is the standard deviation threshold to discard cases during fast cord movements.
 % Owned by Sheng Xu research group, University of California, San Diego.
 
@@ -141,8 +141,8 @@ end
 for tp = 1:SzClr(3)
     image(IGfinal(:,:,:,tp))
     pause(1/VFR);
-
 end
+
 
 
 
